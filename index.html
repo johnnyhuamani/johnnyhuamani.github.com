@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/UNALM2018_0.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-12.0894203437,-76.9578236941],[-12.0760371058,-76.9363809555]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        L.control.locate().addTo(map);
+        var measureControl = new L.Control.Measure({
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        var basemap0 = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap0.addTo(map);
+        var basemap1 = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>,<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap1.addTo(map);
+        var basemap2 = L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>,&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap2.addTo(map);
+        var basemap3 = L.tileLayer('http://a.tile.stamen.com/terrain/{z}/{x}/{y}.png', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>,<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash;Map data: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap3.addTo(map);
+        function setBounds() {
+        }
+        function pop_UNALM2018_0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Uso_de_Tie'] !== null ? Autolinker.link(String(feature.properties['Uso_de_Tie'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Clasificac'] !== null ? Autolinker.link(String(feature.properties['Clasificac'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Simbolo'] !== null ? Autolinker.link(String(feature.properties['Simbolo'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Responsabl'] !== null ? Autolinker.link(String(feature.properties['Responsabl'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Area'] !== null ? Autolinker.link(String(feature.properties['Area'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Cod'] !== null ? Autolinker.link(String(feature.properties['Cod'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_UNALM2018_0_0(feature) {
+            switch(String(feature.properties['Clasificac'])) {
+                case 'Administrativa':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(97,201,222,1.0)',
+            }
+                    break;
+                case 'Agua':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(195,60,202,1.0)',
+            }
+                    break;
+                case 'Almacen':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(142,206,30,1.0)',
+            }
+                    break;
+                case 'Areas cultivadas de investigacion':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(79,217,116,1.0)',
+            }
+                    break;
+                case 'Areas Cultivadas de Investigacion':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(239,86,155,1.0)',
+            }
+                    break;
+                case 'Areas Cultivadas de Produccion':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(79,151,213,1.0)',
+            }
+                    break;
+                case 'Areas Verdes de Recreacion':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(157,15,233,1.0)',
+            }
+                    break;
+                case 'Aulas/Auditorio':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,113,88,1.0)',
+            }
+                    break;
+                case 'Biblioteca':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(203,47,71,1.0)',
+            }
+                    break;
+                case 'Camino':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(85,116,214,1.0)',
+            }
+                    break;
+                case 'Capilla':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(97,24,231,1.0)',
+            }
+                    break;
+                case 'CCFF':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(46,202,134,1.0)',
+            }
+                    break;
+                case 'Centro de Idiomas':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(121,117,205,1.0)',
+            }
+                    break;
+                case 'Comedor/Cafetines':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(214,224,72,1.0)',
+            }
+                    break;
+                case 'Deportes':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(202,169,61,1.0)',
+            }
+                    break;
+                case 'Estacionamiento':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(233,184,141,1.0)',
+            }
+                    break;
+                case 'Facultades/MaestrÃ­a':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(43,216,193,1.0)',
+            }
+                    break;
+                case 'Laboratorio':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(110,230,105,1.0)',
+            }
+                    break;
+                case 'Otros':
+                    return {
+                pane: 'pane_UNALM2018_0',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(100,237,31,1.0)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_UNALM2018_0');
+        map.getPane('pane_UNALM2018_0').style.zIndex = 400;
+        map.getPane('pane_UNALM2018_0').style['mix-blend-mode'] = 'normal';
+        var layer_UNALM2018_0 = new L.geoJson(json_UNALM2018_0, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_UNALM2018_0',
+            onEachFeature: pop_UNALM2018_0,
+            style: style_UNALM2018_0_0,
+        });
+        bounds_group.addLayer(layer_UNALM2018_0);
+        map.addLayer(layer_UNALM2018_0);
+        var baseMaps = {'OSM': basemap0, 'Stamen Toner': basemap1, 'Thunderforest Landscape': basemap2, 'Stamen Terrain': basemap3};
+        L.control.layers(baseMaps,{'UNALM 2018<br /><table><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Administrativa0.png" /></td><td>Administrativa</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Agua1.png" /></td><td>Agua</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Almacen2.png" /></td><td>Almacen</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Areascultivadasdeinvestigacion3.png" /></td><td>Areas cultivadas de investigacion</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_AreasCultivadasdeInvestigacion4.png" /></td><td>Areas Cultivadas de Investigacion</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_AreasCultivadasdeProduccion5.png" /></td><td>Areas Cultivadas de Produccion</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_AreasVerdesdeRecreacion6.png" /></td><td>Areas Verdes de Recreacion</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_AulasAuditorio7.png" /></td><td>Aulas/Auditorio</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Biblioteca8.png" /></td><td>Biblioteca</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Camino9.png" /></td><td>Camino</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Capilla10.png" /></td><td>Capilla</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_CCFF11.png" /></td><td>CCFF</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_CentrodeIdiomas12.png" /></td><td>Centro de Idiomas</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_ComedorCafetines13.png" /></td><td>Comedor/Cafetines</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Deportes14.png" /></td><td>Deportes</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Estacionamiento15.png" /></td><td>Estacionamiento</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_FacultadesMaestra16.png" /></td><td>Facultades/MaestrÃ­a</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Laboratorio17.png" /></td><td>Laboratorio</td></tr><tr><td style="text-align: center;"><img src="legend/UNALM2018_0_Otros18.png" /></td><td>Otros</td></tr></table>': layer_UNALM2018_0,}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
